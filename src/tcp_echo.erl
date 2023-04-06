@@ -1,5 +1,8 @@
 -module(tcp_echo).
--export([init/1]).
+-export([start_link/1]).
+
+start_link(Port) ->
+  {ok, spawn(fun() -> init(Port) end)}.
 
 init(Port) ->
   {ok, Socket} = gen_tcp:listen(Port, [binary, {reuseaddr, true}, {packet, 0}]),
@@ -21,5 +24,5 @@ do_recv(Connection) ->
       gen_tcp:send(Connection, Data),
       do_recv(Connection);
     {tcp_closed, Connection} ->
-      io:format("Connection closed~p~n", [Connection]);
+      io:format("Connection closed~p~n", [Connection])
   end.
