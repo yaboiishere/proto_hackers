@@ -21,32 +21,22 @@ do_recv(Connection, Bs) ->
   case gen_tcp:recv(Connection, 0) of
     {ok, Data} ->
       io:format("Received: ~p~n", [Data]),
-      do_recv(Connection, [Bs, Data]);
+      case (parse_request(Data)) of
+        {malformed_request, Response} ->
+          io:format("Malformed request: ~p~n", [Data]),
+          gen_tcp:send(Connection, Response),
+          gen_tcp:close(Connection);
+        {ok, Response} ->
+          io:format("Sending response: ~p~n", [iolist_to_binary([Response, <<"\n">>])]),
+          gen_tcp:send(Connection, iolist_to_binary([Response, <<"\n">>])),
+          io:format("Neeeext~n", []),
+          do_recv(Connection, [Bs, Data])
+      end;
     {error, closed} ->
       io:format("Connection closed~p~n", [Connection]),
-      Binary = list_to_binary(Bs),
-      Data = binary:split(Binary, <<"\n">>),
-      handle_request(Data, Connection, Bs),
-
       gen_tcp:close(Connection),
       {ok, list_to_binary(Bs)}
   end.
-
-handle_request([], _Connection, Acc) ->
-  Acc;
-
-handle_request([H|T], Connection, Acc) ->
-  case parse_request(H) of
-    {malformed_request, Response} ->
-      io:format("Malformed request: ~p~n", [H]),
-      gen_tcp:send(Connection, Response),
-      gen_tcp:close(Connection);
-    {ok, Response} ->
-      io:format("Sending response: ~p~n", [iolist_to_binary([Response, <<"\n">>])]),
-      gen_tcp:send(Connection, iolist_to_binary([Response, <<"\n">>])),
-      io:format("Neeeext~n", [])
-  end,
-  handle_request(T, Connection, Acc).
 
 parse_request(Binary) ->
       Decoded = try jiffy:decode(Binary, [return_maps]) of
