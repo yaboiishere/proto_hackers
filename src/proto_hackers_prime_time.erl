@@ -58,6 +58,7 @@ validate_input(Request) ->
       io:format("Malformed request: ~p~n", [Request]),
       malformed_request.
 
+is_prime(1) -> false;
 is_prime(N) -> is_prime(N,2).
 is_prime(N,N) -> true;
 is_prime(N,M)->
