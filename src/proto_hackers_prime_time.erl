@@ -27,8 +27,8 @@ do_recv(Connection, Bs) ->
           gen_tcp:send(Connection, Response),
           gen_tcp:close(Connection);
         {ok, Response} ->
-          io:format("Sending response: ~p~n", [Response]),
-          gen_tcp:send(Connection, Response),
+          io:format("Sending response: ~p~n", [iolist_to_binary([Response, <<"\n">>])]),
+          gen_tcp:send(Connection, iolist_to_binary([Response, <<"\n">>])),
           io:format("Neeeext~n", []),
           do_recv(Connection, [Bs, Data])
       end;
