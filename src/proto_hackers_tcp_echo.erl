@@ -1,4 +1,4 @@
--module(tcp_echo).
+-module(proto_hackers_tcp_echo).
 -export([start_link/1]).
 
 start_link(Port) ->

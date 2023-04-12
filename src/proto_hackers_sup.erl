@@ -31,7 +31,7 @@ init([]) ->
                  period => 1},
     ChildSpecs = [
                   #{id => tcp_echo,
-                    start => {tcp_echo, start_link, [3000]},
+                    start => {proto_hackers_tcp_echo, start_link, [3000]},
                     restart => permanent,
                     shutdown => 5000,
                     type => worker}
