@@ -33,6 +33,7 @@ do_recv(Connection, Bs) ->
       end;
     {error, closed} ->
       io:format("Connection closed~p~n", [Connection]),
+      gen_tcp:close(Connection),
       {ok, list_to_binary(Bs)}
   end.
 
