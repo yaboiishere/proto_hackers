@@ -29,6 +29,7 @@ do_recv(Connection, Bs) ->
         {ok, Response} ->
           io:format("Sending response: ~p~n", [Response]),
           gen_tcp:send(Connection, Response),
+          io:format("Neeeext~n", []),
           do_recv(Connection, [Bs, Data])
       end;
     {error, closed} ->
