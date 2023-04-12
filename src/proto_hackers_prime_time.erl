@@ -57,13 +57,11 @@ validate_input(Request) ->
       io:format("Malformed request: ~p~n", [Request]),
       malformed_request.
 
-  
-is_prime(Number) ->
-  case Number of
-    1 ->
-      false;
-    2 ->
-      true;
-    _ ->
-      not lists:any(fun(X) -> Number rem X == 0 end, lists:seq(2, Number - 1))
-  end.
+is_prime(N) -> is_prime(N,2).
+is_prime(N,N) -> true;
+is_prime(N,M)->
+  ChPrime = N rem M,
+  if 
+    ChPrime == 0 -> false;
+    true -> is_prime(N,M+1)
+end.
