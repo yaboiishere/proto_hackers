@@ -23,11 +23,11 @@ do_recv(Connection, Bs) ->
       io:format("Received: ~p~n", [Data]),
       do_recv(Connection, [Bs, Data]);
     {error, closed} ->
+      io:format("Connection closed~p~n", [Connection]),
       Binary = list_to_binary(Bs),
       Data = binary:split(Binary, <<"\n">>),
       handle_request(Data, Connection, Bs),
 
-      io:format("Connection closed~p~n", [Connection]),
       gen_tcp:close(Connection),
       {ok, list_to_binary(Bs)}
   end.
