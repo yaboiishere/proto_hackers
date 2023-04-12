@@ -34,6 +34,11 @@ init([]) ->
                     start => {proto_hackers_tcp_echo, start_link, [3000]},
                     restart => permanent,
                     shutdown => 5000,
+                    type => worker},
+                  #{id => prime_time,
+                    start => {proto_hackers_prime_time, start_link, [3001]},
+                    restart => permanent,
+                    shutdown => 5000,
                     type => worker}
                  ],
     {ok, {SupFlags, ChildSpecs}}.
